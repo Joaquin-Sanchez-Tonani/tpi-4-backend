@@ -49,7 +49,8 @@ namespace Infraestructure.Service
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 Email = request.Email,
-                Password = hashedPassword
+                Password = hashedPassword,
+                Dni = request.Dni
             };
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();

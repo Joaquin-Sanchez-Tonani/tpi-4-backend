@@ -60,12 +60,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ISysAdminService, SysAdminService>();
-<<<<<<< HEAD
+
 builder.Services.AddScoped<IUserContext, UserContext>();
 
-=======
+
 builder.Services.AddScoped<IClassService, ClassService>();
->>>>>>> 88ab7c169918d329accd0949d4f723ec21fe6f7d
 //Servicios de utilidad
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpContextAccessor();
