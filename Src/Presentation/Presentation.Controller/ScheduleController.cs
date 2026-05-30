@@ -42,7 +42,6 @@ namespace Presentation.Controller
                 DayOfWeek = (Day)dto.DayOfWeek,
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
-                Id_Class = dto.Id_Class,
                 IsActive = true
             };
 
@@ -53,7 +52,7 @@ namespace Presentation.Controller
 
             var response = new ScheduleResponse
             {
-                Id = created.Id,
+
                 DayOfWeek = (int)created.DayOfWeek,
                 StartTime = created.StartTime,
                 EndTime = created.EndTime,

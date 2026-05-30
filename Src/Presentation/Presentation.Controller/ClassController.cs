@@ -65,7 +65,6 @@ namespace Presentation.Presentation.Controller
 
                 Schedules = gymClass.Schedules.Select(s => new ScheduleResponse
                 {
-                    Id = s.Id,
                     DayOfWeek = (int)s.DayOfWeek,
                     StartTime = s.StartTime,
                     EndTime = s.EndTime,

@@ -61,7 +61,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ISysAdminService, SysAdminService>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 
 builder.Services.AddScoped<IClassService, ClassService>();
