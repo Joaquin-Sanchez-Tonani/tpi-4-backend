@@ -25,6 +25,8 @@ namespace Application.Services
             client.Id_Plan = planId;
             client.IsActive = true;
             await _repo.Update(client);
+            await _repo.Save(); 
+
         }
 
     }
