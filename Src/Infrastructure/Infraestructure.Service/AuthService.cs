@@ -11,8 +11,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using Trabajop4.Infrastructure;
+using Application.Templates;
+using Application.Constants;
 
-namespace Infraestructure.Service
+namespace Infrastructure.Service
 {
     public class AuthService : IAuthService
     {
@@ -80,13 +82,12 @@ namespace Infraestructure.Service
 
             var verificationLink = $"https://localhost:7001/api/clients/verify-email?token={verificationToken}";
             await _emailService.SendEmailAsync(
-                newUser.Email,
-                "Verifica tu cuenta",
-                $@"
-                <h2>Bienvenido al gimnasio</h2>
-                <p>Hace click en el siguiente enlace para verificar tu cuenta:</p>
-                <a href='{verificationLink}'> Verificar cuenta</a>"
-                );
+                 newUser.Email,
+                 EmailSubjects.VerifyEmail,
+                 EmailTemplates.VerifyAccount(
+                     newUser.Name,
+                     verificationLink)
+                 );
 
             return new AuthResponse
             {
@@ -167,12 +168,11 @@ namespace Infraestructure.Service
 
             await _emailService.SendEmailAsync(
                 user.Email,
-                "Verifica tu cuenta",
-                $@"
-                <h2>Verificacion de cuenta</h2>
-                <p>Solicitaste un nuevo enlace de verificacion.</p>
-                <a href='{verificationLink}'>Verificar cuenta</a>"
-                );
+                EmailSubjects.VerifyEmail,
+                EmailTemplates.ResendVerification(
+                    user.Name,
+                    verificationLink)
+            );
 
             return true;
         }
@@ -259,11 +259,11 @@ namespace Infraestructure.Service
 
             await _emailService.SendEmailAsync(
                 user.Email,
-                "Recuperar contraseña",
-                $@"
-                <h2>Recuperacion de contraseña</h2>
-                <p>Hace click en el siguiente enlace:</p>
-                <a href='{resetLink}'>Restablecer contraseña</a>");
+                EmailSubjects.ResetPassword,
+                EmailTemplates.ResetPassword(
+                    user.Name,
+                    resetLink)
+            );
 
             return true;
         }

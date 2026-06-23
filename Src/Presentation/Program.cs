@@ -1,3 +1,4 @@
+using Application.Application.Interfaces;
 using Application.Interfaces;
 using Application.Services;
 using Domain.Interface;
@@ -14,6 +15,7 @@ using Presentation.Authorization;
 using Presentation.Middlewares;
 using System.Text;
 using Trabajop4.Infrastructure;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,12 +75,14 @@ builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IInscriptionService, InscriptionService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.Configure<EmailSettings>(
-    builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 //Servicios de utilidad
 builder.Services.AddScoped<DatabaseSeeder>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ISubscriptionService,SubscriptionService>();
 
+builder.Services.AddHostedService<SubscriptionBackgroundService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -107,6 +111,14 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
 
+builder.Services.AddHttpClient<IMercadoPagoService,
+    MercadoPagoService>(client =>
+    {
+        client.BaseAddress =
+            new Uri("https://api.mercadopago.com/");
+    });
+
+
 
 
 // --- PIPELINE DE LA APLICACIÓN ---
@@ -131,7 +143,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();

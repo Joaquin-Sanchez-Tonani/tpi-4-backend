@@ -129,5 +129,14 @@ namespace Presentation.Presentation.Controller
 
             return Ok(result.Select(c => c.ToClassResponse()));
         }
+
+        //-------------------- Client Inscriptions-----------------------------
+
+        [HttpGet("clientInscriptions/{clientId}")]
+        public async Task<ActionResult> GetClientInscriptions(Guid clientId)
+        {
+            var result = await _AdminService.GetClientInscriptions(clientId);
+            return Ok(result);
+        }
     }
 }
