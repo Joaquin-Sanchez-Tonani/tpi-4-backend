@@ -10,7 +10,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using Trabajop4.Infrastructure;
 using Application.Templates;
 using Application.Constants;
 
@@ -43,14 +42,11 @@ namespace Infrastructure.Service
                 throw new ValidationException(
                     "Invalid email format");
             }
-<<<<<<< HEAD
             if (request.Password.Length < 8)
             {
                 throw new ValidationException(
                     "Password must be at least 8 characters");
             }
-=======
->>>>>>> e87aa96db8aec46f438e5231abecf58576db0487
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(c => c.Email == request.Email);
             if (existingUser != null)
@@ -329,8 +325,5 @@ namespace Infrastructure.Service
             }
         }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> e87aa96db8aec46f438e5231abecf58576db0487
+
