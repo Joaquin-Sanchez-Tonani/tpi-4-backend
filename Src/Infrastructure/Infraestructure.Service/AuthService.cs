@@ -1,18 +1,19 @@
-﻿using Application.Dtos.Request;
+﻿using Application.Constants;
+using Application.Dtos.Request;
 using Application.Dtos.Responses;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Templates;
 using Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Buffers.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using Trabajop4.Infrastructure;
-using Application.Templates;
-using Application.Constants;
 
 namespace Infrastructure.Service
 {
@@ -34,10 +35,12 @@ namespace Infrastructure.Service
         }
 
         //Agregar validaciones de registro
+
         public async Task<AuthResponse?> SingUp(SingUpRequest request)
         {
-
             var baseUrl = _configuration["AppSettings:BaseUrl"];
+
+
             string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (!Regex.IsMatch(request.Email, patron))
             {
@@ -140,6 +143,8 @@ namespace Infrastructure.Service
 
         public async Task<bool> ResendVerificationEmail(string email)
         {
+            var baseUrl = _configuration["AppSettings:BaseUrl"];
+
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
 
@@ -156,8 +161,8 @@ namespace Infrastructure.Service
 
             await _context.SaveChangesAsync();
 
-            var verificationLink =
-                $"https://localhost:7001/api/clients/verify-email?token={verificationToken}";
+            var verificationLink = $"{baseUrl}/api/clients/verify-email?token={verificationToken}";
+
 
             await _emailService.SendEmailAsync(
                 user.Email,
@@ -239,6 +244,8 @@ namespace Infrastructure.Service
         }
         public async Task<bool> ForgotPassword(string email)
         {
+            var baseUrl = _configuration["AppSettings:BaseUrl"];
+
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
 
@@ -247,8 +254,8 @@ namespace Infrastructure.Service
 
             var token = GeneratePasswordResetToken(user);
 
-            var resetLink =
-                $"https://localhost:7001/reset-password?token={token}";
+            var resetLink = $"{baseUrl}/reset-password?token={token}";
+
 
             await _emailService.SendEmailAsync(
                 user.Email,
