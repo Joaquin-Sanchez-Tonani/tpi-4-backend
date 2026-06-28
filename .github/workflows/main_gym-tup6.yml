@@ -57,17 +57,16 @@ jobs:
           MERCADOPAGO_NOTIFICATION_URL: ${{ secrets.MERCADOPAGO_NOTIFICATION_URL }}
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
         run: |
-          az webapp config appsettings set `
-            --name Gym-tup6 `
-            --resource-group ProyectoGymTup6 `
-            --settings `
-              "Jwt__Key=$env:JWT_KEY" `
-              "SeedAdmin__Password=$env:SEED_ADMIN_PASSWORD" `
-              "EmailSettings__Password=$env:EMAIL_PASSWORD" `
-              "ConnectionStrings__DefaultConnection=$env:CONNECTION_STRING" `
-              "MercadoPago__AccessToken=$env:MERCADOPAGO_ACCESS_TOKEN" `
-              "MercadoPago__NotificationUrl=$env:MERCADOPAGO_NOTIFICATION_URL" `
-              "AppSettings__BaseUrl=$env:APP_BASE_URL"
+          $settings = @(
+            "Jwt__Key=$env:JWT_KEY",
+            "SeedAdmin__Password=$env:SEED_ADMIN_PASSWORD",
+            "EmailSettings__Password=$env:EMAIL_PASSWORD",
+            "ConnectionStrings__DefaultConnection=$env:CONNECTION_STRING",
+            "MercadoPago__AccessToken=$env:MERCADOPAGO_ACCESS_TOKEN",
+            "MercadoPago__NotificationUrl=$env:MERCADOPAGO_NOTIFICATION_URL",
+            "AppSettings__BaseUrl=$env:APP_BASE_URL"
+          )
+          az webapp config appsettings set --name Gym-tup6 --resource-group ProyectoGymTup6 --settings @settings
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
