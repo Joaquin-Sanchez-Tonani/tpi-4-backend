@@ -1,6 +1,6 @@
-using Application.Dtos.Request;
-using Application.Dtos.Responses;
+
 using Application.Interfaces;
+using Application.Dtos.Request;
 using Domain.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +14,9 @@ namespace Presentation.Controller
     public abstract class UsersController<T> : ControllerBase where T : User
     {
         protected readonly IUserService _service;
-        protected readonly IAuthService _authService;
+        
 
-        public UsersController(IUserService service, IAuthService authService)
+        public UsersController(IUserService service)
         {
             _service = service;
             _authService = authService;
