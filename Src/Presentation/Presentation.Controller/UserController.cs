@@ -23,6 +23,11 @@ namespace Presentation.Controller
             _authService = authService;
         }
 
+        protected UsersController(IUserService service)
+        {
+            _service = service;
+        }
+
         [AllowAnonymous]
         [HttpPost("signin")]
         public async Task<ActionResult<SingInResponse>> SingIn(
