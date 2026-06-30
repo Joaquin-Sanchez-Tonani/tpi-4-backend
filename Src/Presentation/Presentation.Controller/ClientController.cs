@@ -1,8 +1,10 @@
-﻿using Application.Interfaces;
+﻿using Application.Dtos.Request;
+using Application.Interfaces;
 using Domain.Entity;
 using Domain.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Authorization;
 using Presentation.Controller;
 using System.Security.Claims;
 
@@ -50,6 +52,35 @@ namespace Presentation.Presentation.Controller
             var initPoint = await _mercadoPagoService.CreatePreference(plan, userId);
 
             return Ok(new { PaymentUrl = initPoint });
+        }
+
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
+        [HttpGet]
+        public virtual async Task<ActionResult> Get()
+        {
+            var users = await _service.GetAll();
+            // devolver solo el tipo específico (Client, Admin, etc.)
+            return Ok(users);
+        }
+
+        ////para que el usuario pueda actualizar su perfil, sin necesidad de ser admin
+        [Authorize]
+        [HttpPut("UpdateMe")]
+        public async Task<IActionResult> UpdateProfile(UpdateUserRequest request)
+        {
+            var result = await _service.UpdateUser(request);
+
+            return Ok(result);
+        }
+
+
+
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
+        [HttpGet("{id}")]
+        public virtual async Task<ActionResult> GetById(Guid id)
+        {
+            var user = await _service.GetById(id);
+            return Ok(user);
         }
     }
 }

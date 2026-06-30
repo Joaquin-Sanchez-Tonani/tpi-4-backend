@@ -118,5 +118,15 @@ namespace Presentation.Presentation.Controller
             var result = await _AdminService.GetClientInscriptions(clientId);
             return Ok(result);
         }
+
+
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
+        [HttpPatch("{id}")]
+        public virtual async Task<IActionResult> Patch(Guid id, User user)
+        {
+            await _service.Update(id, user);
+
+            return NoContent();
+        }
     }
 }
