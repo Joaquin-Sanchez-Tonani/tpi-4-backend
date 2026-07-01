@@ -11,13 +11,13 @@ using Presentation.Controller;
 namespace Presentation.Presentation.Controller
 {
 
-    [Authorize(Policy = Policies.AdminOSysAdmin)]
+  
     [Route("api/[controller]")]
     public class PlanController : ControllerBase
     {
 
         private readonly IAdminService _AdminService;
-        public PlanController(IUserService service, IAdminService adminService)
+        public PlanController( IAdminService adminService)
         {
             _AdminService = adminService;
         }
@@ -31,7 +31,14 @@ namespace Presentation.Presentation.Controller
 
         // -------------PLAN controller --------------------
 
+        [HttpGet("GetPlan")]
+        public async Task<ActionResult<IEnumerable<PlanResponse>>> GetPlan()
+        {
+            var result = await _AdminService.GetPlan();
+            return Ok(result.Select(p => p.ToPlanResponse()));
+        }
 
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
         [HttpPut("UpdatePlan")]
         public async Task<ActionResult> UpdatePlan(Guid id, CreatePlanAdminRequest request)
         {
@@ -43,7 +50,7 @@ namespace Presentation.Presentation.Controller
             });
         }
 
-
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
         [HttpPost("CreatePlan")]
         public async Task<ActionResult> CreatePlan(CreatePlanAdminRequest request)
         {
@@ -55,7 +62,7 @@ namespace Presentation.Presentation.Controller
             });
         }
 
-
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
         [HttpDelete("DeletePlan")]
         public async Task<ActionResult> DeletePlan(Guid id)
         {
@@ -66,15 +73,10 @@ namespace Presentation.Presentation.Controller
         }
 
 
-        [HttpGet("GetPlan")]
-        public async Task<ActionResult<IEnumerable<PlanResponse>>> GetPlan()
-        {
-            var result = await _AdminService.GetPlan();
-            return Ok(result.Select(p => p.ToPlanResponse()));
-        }
 
 
 
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
         [HttpGet("getClassDetail/{id}")]
         public async Task<ActionResult> GetClassDetail(Guid id)
         {
@@ -82,7 +84,7 @@ namespace Presentation.Presentation.Controller
             return Ok(result);
         }
 
-
+        [Authorize(Policy = Policies.AdminOSysAdmin)]
         [HttpPut("updateClass/{id}")]
         public async Task<ActionResult> UpdateClass(Guid id, [FromBody] CreateClassWithSchedulesRequest request)
         {
