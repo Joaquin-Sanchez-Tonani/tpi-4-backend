@@ -1,17 +1,21 @@
-using Domain.Interface;
+using Application.Application.Interfaces;
 using Application.Interfaces;
 using Application.Services;
-using Infrastructure.Service;
+using Domain.Interface;
 using Infrastructure;
+using Infrastructure.Infraestructure.Service;
 using Infrastructure.Repositories;
-using Presentation.Authorization;
-using Presentation.Middlewares;
+using Infrastructure.Service;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Polly;
+using Presentation.Authorization;
+using Presentation.Middlewares;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -138,7 +142,32 @@ builder.Services.AddHttpClient<IMercadoPagoService, MercadoPagoService>(client =
     builder.AddTimeout(TimeSpan.FromSeconds(30));
 });
 
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+    })
+    .AddCookie(options =>
+    {
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    })
+    .AddGoogle(options =>
+    {
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
+        options.ClientId = builder.Configuration["Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+
+        options.Scope.Add("https://www.googleapis.com/auth/calendar");
+        options.Scope.Add("https://www.googleapis.com/auth/calendar.events");
+
+        options.AccessType = "offline";
+        options.SaveTokens = true;
+    });
+builder.Services.AddHttpClient<IGoogleCalendarService, GoogleCalendarService>();
 
 
 // --- PIPELINE DE LA APLICACIÓN ---
