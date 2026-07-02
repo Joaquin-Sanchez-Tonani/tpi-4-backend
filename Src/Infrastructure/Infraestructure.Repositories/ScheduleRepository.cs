@@ -1,6 +1,6 @@
 ﻿using Domain.Entity;
 using Domain.Interface;
-
+using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories
 {
     public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
@@ -8,6 +8,20 @@ namespace Infrastructure.Repositories
 
         public ScheduleRepository(ApplicationDbContext context):base(context)
         {
+        }
+        public async Task<List<Schedule>> GetAll()
+        {
+            return await _context.Schedules.ToListAsync();
+        }
+        public async Task<Schedule?> GetById(Guid id)
+        {
+            return await _context.Schedules.FindAsync(id);
+        }
+        public async Task<List<Schedule>> GetByClassId(Guid classId)
+        {
+            return await _context.Schedules
+                .Where(s => s.Id_Class == classId && s.IsActive)
+                .ToListAsync();
         }
         public async Task<Schedule> Create(Schedule schedule)
         {

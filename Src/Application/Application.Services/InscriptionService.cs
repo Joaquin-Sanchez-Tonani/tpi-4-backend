@@ -25,7 +25,22 @@ namespace Application.Services
             _userRepo = userRepo;
             _planRepo = planRepo;
         }
+        public async Task<InscriptionResponse?> GetById(Guid id)
+        {
+            var inscription = await _inscriptionRepo.GetById(id);
 
+            if (inscription == null)
+                return null;
+
+            return new InscriptionResponse
+            {
+                Id = inscription.Id,
+                UserId = inscription.UserId,
+                ClassId = inscription.ClassId,
+                InscriptionDate = inscription.InscriptionDate,
+                IsActive = inscription.IsActive
+            };
+        }
         public async Task<InscriptionResult> Inscribe(InscriptionRequest request)
         {
             var user = await _userRepo.GetById(request.UserId);
